@@ -68,7 +68,7 @@ fn get_score(game_stamps: &[Stamp], offset: i32) -> (i32, i32) {
 mod tests {
 use crate::*;
     #[test]
-    fn bounds() {
+    fn in_bounds() {
         let game = generate_game();
 
         println!("{:?}", get_score(&game, 50000));
@@ -86,7 +86,18 @@ use crate::*;
     #[test]
     fn rand() {
         let game = generate_game();
+        for _ in &game {
+            println!("{:?}", get_score(&game, rand::random::<i32>()));
+        }
+    }
+    #[test]
+    fn bounded_rand() {
+        let game = generate_game();
+        let mut last_taken_score = (game[0].score.home, game[0].score.away);
+        for _ in &game {
+             last_taken_score = get_score(&game, rand::thread_rng().gen_range(0..TIMESTAMPS_COUNT as i32));
+        }
 
-        println!("{:?}", get_score(&game, rand::random::<i32>()));
+        println!("{:?}", last_taken_score);
     }
 }
